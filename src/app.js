@@ -23,4 +23,11 @@ app.use(express.static("public"));
 //setting up cookie parser to store secure cookies in browser
 app.use(cookieParser());
 
+//routes import
+import userRouter from "./routes/user.routes.js";
+
+//routes declaration - this is bassically fixed route that when client goes on users the route is activated and then further routing will working from /users
+//routes will pass the control further - basically prefix for users route
+app.use("/api/v1/users", userRouter);
+
 export { app };
