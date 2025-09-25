@@ -7,7 +7,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
   const { fullName, username, email, password } = req.body;
-  console.log("email:", email);
 
   //validation - not empty
   // this is a method for single single if condition check
@@ -23,29 +22,38 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //check if user already exists - username and email
-  const existeduser = User.findOne({
+  const existedUser = await User.findOne({
     //using operator that can check multiple fields at once
     $or: [{ email }, { username }],
   });
-  if (existeduser) {
+  if (existedUser) {
     throw new ApiError(409, "User with email or username already exists");
   }
 
   //check for images, check for avatar
   //upload them to cloudinary, avatar check
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
+
+  if (!avatarLocalPath) {
+    //we have already setup multer for file handing it has feature of files which gives us access to the file data
+    throw new ApiError(400, "Avatar image is required");
+  }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
   if (!avatar) {
     throw new ApiError(400, "Avatar is required");
-  }
-
-  //we have already setup multer for file handing it has feature of files which gives us access to the file data
-  const avatarLocalPath = req.files?.avatar[0]?.path;
-  if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar image is required");
   }
 
   //create user object - to send the user data in mongodb - create entry in db
