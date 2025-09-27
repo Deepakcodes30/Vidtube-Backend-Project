@@ -343,7 +343,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params; //params is basically url access
 
   if (!username?.trim) {
-    //trim bascially removes additional spaces from front and back
+    //trim basically removes additional spaces from front and back
     throw new ApiError(400, "User not found");
   }
 
@@ -420,12 +420,14 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
     {
+      //we have got the user now - we will lookup the user from other models
       $lookup: {
-        from: "videos", //kahase match karana hai
-        localField: "watchHistory", //local field matlab humare user mese jo watchhistory me videos ki id hai woh
-        foreignField: "_id", //videos model hai ussmese video ki id
-        as: "watchHistory", // user ki watchhistory me video hai uski id aur video model me joh video ki id hai woh match ho gayi toh watch history mil gayi.
+        from: "videos", //from where/which model we are comparing
+        localField: "watchHistory", //local fields means the base model i.e in our case User - in user model we are comparing the watch history that is basically video which has its own id
+        foreignField: "_id", //foreign field is basically the video model and its field
+        as: "watchHistory", //if the user watch history's video id match with the video model id then we get the watch history basically
         pipeline: [
+          // now we have received the video and are in video object - we are getting complete owner/user details but we just need a few so we will match the owner with user id and take few fields only
           {
             $lookup: {
               from: "users",
