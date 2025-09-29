@@ -19,6 +19,6 @@ const commentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-commentSchema.plugin(mongooseAggregatePaginate);
+commentSchema.plugin(mongooseAggregatePaginate); //so that we can provide pages because there can be 100s of comments and we cannot show all at once
 
 export const Comment = mongoose.model("Comment", commentSchema);
