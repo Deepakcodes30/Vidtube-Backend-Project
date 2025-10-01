@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { ApiError } from "./ApiError.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,4 +25,21 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export { uploadOnCloudinary };
+const deleteFromCloudinary = async (localFilePath) => {
+  try {
+    if (!localFilePath) return null;
+    //destroy the video or image from cloudinary
+    const response = await cloudinary.uploader.destroy(localFilePath, {
+      resource_type: "auto",
+    });
+    //existing file has been successfully deleted from cloudinary
+    console.log("Deleted file response:", response);
+    return response;
+  } catch (error) {
+    throw new ApiError(
+      501,
+      "there was some technical error while deleting the existing file"
+    );
+  }
+};
+export { uploadOnCloudinary, deleteFromCloudinary };
