@@ -27,11 +27,13 @@ app.use(cookieParser());
 import userRouter from "./routes/user.routes.js";
 import videoRouter from "./routes/video.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
+import playlistRouter from "./routes/playlist.routes.js";
 
 //routes declaration - this is basically fixed route that when client goes on users the route is activated and then further routing will working from /users
 //routes will pass the control further - basically prefix for users route
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/subscription", subscriptionRouter);
+app.use("/api/v1/playlist", playlistRouter);
 
 export { app };
