@@ -13,7 +13,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
   }
 
   const userId = req.user._id;
-  if (!isValidObjectId(userId)) {
+  if (!userId || !isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid user ID");
   }
 

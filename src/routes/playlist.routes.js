@@ -23,4 +23,4 @@ router.route("/:playlistId/remove/:videoId").patch(removeVideoFromPlaylist);
 router.route("/delete/:playlistId").delete(deletePlaylist);
 router.route("/update-playlist/:playlistId").patch(updatePlaylist);
 
-export default Router;
+export default router;
