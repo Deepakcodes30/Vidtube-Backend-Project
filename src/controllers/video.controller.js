@@ -20,7 +20,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   const pageNum = parseInt(page);
   const limitNum = parseInt(limit);
-  const skip = (pageNum - 1) * limitNum; // if pageNum 3 then 3 -1 = 2 pages and limit is 10 so 2 x 10 20 = so basically skipping 20 videos
   let match = {};
 
   if (query) {
@@ -35,7 +34,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     match.owner = userId;
   } // what if someone search by user name
 
-  const videos = await Video.aggregate([
+  const videos = Video.aggregate([
     { $match: match },
     {
       $lookup: {
@@ -68,32 +67,16 @@ const getAllVideos = asyncHandler(async (req, res) => {
         [sortBy]: sortType === "asc" ? 1 : -1,
       },
     },
-    { $skip: skip },
-    { $limit: limitNum },
   ]);
 
-  const fetchedVideos = await Video.aggregatePaginate(videos, {
+  const totalVideos = await Video.aggregatePaginate(videos, {
     limit: limitNum,
     page: pageNum,
   });
 
-  const totalVideos = await Video.countDocuments(match);
-
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        fetchedVideos,
-        pagination: {
-          total: totalVideos,
-          page: pageNum,
-          limit: limitNum,
-          totalPages: Math.ceil(totalVideos / limitNum),
-        },
-      },
-      "All videos fetched successfully"
-    )
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, totalVideos, "All videos fetched successfully"));
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
