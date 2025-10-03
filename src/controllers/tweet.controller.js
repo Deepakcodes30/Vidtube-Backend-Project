@@ -3,6 +3,7 @@ import { Tweet } from "../models/tweet.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ownershipCheck } from "../utils/ownershipCheck.js";
 
 const createTweet = asyncHandler(async (req, res) => {
   //TODO: create tweet
@@ -91,9 +92,7 @@ const updateTweet = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Tweet not found");
   }
 
-  if (tweet.owner.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "Unauthorized action");
-  }
+  await ownershipCheck(tweet.owner, req.user._id);
 
   const updatedTweet = await Tweet.findByIdAndUpdate(
     tweetId,
@@ -118,9 +117,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Tweet not found");
   }
 
-  if (tweet.owner.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "Unauthorized action");
-  }
+  await ownershipCheck(tweet.owner, req.user._id);
 
   await Tweet.findByIdAndDelete(tweetId);
 

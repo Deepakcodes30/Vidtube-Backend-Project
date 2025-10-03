@@ -5,6 +5,7 @@ import { Video } from "../models/video.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
+import { ownershipCheck } from "../utils/ownershipCheck.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   const {
@@ -216,6 +217,8 @@ const updateVideo = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Video not found");
   }
 
+  await ownershipCheck(video.owner, req.user._id);
+
   const videoLocalPath = req.files?.videoFile?.[0]?.path;
   const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
 
@@ -334,6 +337,8 @@ const deleteVideo = asyncHandler(async (req, res) => {
     throw new ApiError(400, "video not found");
   }
 
+  await ownershipCheck(video.owner, req.user._id);
+
   await deleteFromCloudinary(video.videoFile);
   await deleteFromCloudinary(video.thumbnail);
 
@@ -356,6 +361,8 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
   if (!video) {
     throw new ApiError(400, "Video not found");
   }
+
+  await ownershipCheck(video.owner, req.user._id);
 
   video.isPublished = !video.isPublished;
   await video.save({ validateBeforeSave: false });
