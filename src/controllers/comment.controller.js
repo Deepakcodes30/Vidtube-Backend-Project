@@ -120,10 +120,6 @@ const updateComment = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Comment not found");
   }
 
-  if (existingComment.video.toString() !== videoId.toString()) {
-    throw new ApiError(400, "Comment is not related to the video");
-  }
-
   await ownershipCheck(existingComment.owner, req.user._id);
 
   const updatedComment = await Comment.findByIdAndUpdate(
