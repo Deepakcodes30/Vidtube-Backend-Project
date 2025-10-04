@@ -1,5 +1,23 @@
 # VidTube Backend Project
 
-This project is a complex backend project that is built with nodejs, expressjs, mongodb, mongoose, jwt, bcrypt, and many more. This project is a complete backend project that has all the features that a backend project should have. We are building a complete video hosting website similar to youtube with all the features like login, signup, upload video, like, dislike, comment, reply, subscribe, unsubscribe, and many more.
+A comprehensive backend application developed using Node.js, Express.js, and MongoDB, providing functionalities such as user authentication, video management, and more.
 
-Project uses all standard practices like JWT, bcrypt, access tokens, refresh Tokens and many more. We have spent a lot of time in building this project and we are sure that you will learn a lot from this project.
+## Features
+
+- **User Authentication**: Secure login and logout mechanisms.
+- **Video Management**: Upload, delete, and manage videos using cloudinary.
+- **Tweet functionality**: Users can Tweet.
+- **Engagement Features**: Like and comment on videos.
+- **Secure Routes**: Protected routes using JWT authentication.
+- **Channel Profile**: Channel profile with all stats like subscribers, all videos, all liked videos, watch history and more.
+
+## Technologies Used
+
+|Layer |       Tech               |
+|-------------|------------------------------|
+|    Backend |       Node.js     |
+| Web framework   |      Express.js          |
+|  NoSQL database   |   MongoDB              |
+| MongoDB object modeling    |   Mongoose    |
+|    JSON Web Token authentication    |  JWT |
+|  Password hashing         |    Bcrypt      |
